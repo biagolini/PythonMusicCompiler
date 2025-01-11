@@ -63,9 +63,10 @@ for audio_file in audio_files:
     # Check if adding the current audio exceeds the target duration (if target duration is defined)
     if target_duration_ms is not None and current_position + len(audio) > target_duration_ms:
         combined_audio += audio  # Add the last audio even if it exceeds the limit
-        start_time_minutes = current_position // 60000
-        start_time_seconds = (current_position % 60000) // 1000
-        audio_start_times.append(f"{start_time_minutes}:{start_time_seconds:02} - {audio_file}")
+        start_time_hours = current_position // 3600000 
+        start_time_minutes = (current_position % 3600000) // 60000
+        start_time_seconds = (current_position % 60000) // 1000 
+        audio_start_times.append(f"{start_time_hours:02}:{start_time_minutes:02}:{start_time_seconds:02} - {audio_file}")
         current_position += len(audio)
         break  # Stop processing further audio files
 
@@ -73,9 +74,11 @@ for audio_file in audio_files:
     combined_audio += audio
 
     # Save the start time (convert milliseconds to minutes:seconds format)
-    start_time_minutes = current_position // 60000
-    start_time_seconds = (current_position % 60000) // 1000
-    audio_start_times.append(f"{start_time_minutes}:{start_time_seconds:02} - {audio_file}")
+    start_time_hours = current_position // 3600000 
+    start_time_minutes = (current_position % 3600000) // 60000
+    start_time_seconds = (current_position % 60000) // 1000 
+    audio_start_times.append(f"{start_time_hours:02}:{start_time_minutes:02}:{start_time_seconds:02} - {audio_file}")
+
 
     # Update the current position
     current_position += len(audio)
