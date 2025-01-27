@@ -2,6 +2,9 @@ import os
 import random
 from pydub import AudioSegment
 
+# Define the output format (mp3 or wav)
+output_format = "mp3"  # Default is mp3
+
 # Define the folder containing the audio files
 source_audio_folder = "SourceFiles"
 
@@ -16,7 +19,8 @@ fade_out_duration = 3000  # in milliseconds (3 seconds)
 random_order = True
 
 # Target duration for the final audio file in seconds
-target_duration_seconds = 7200  # 2 hours
+target_duration_seconds = 14400  # 4 hours
+# target_duration_seconds = None # To not limit the maximum size of the song, use None
 
 # Ensure the destination folder exists
 os.makedirs(destination_audio_folder, exist_ok=True)
@@ -63,9 +67,9 @@ for audio_file in audio_files:
     # Check if adding the current audio exceeds the target duration (if target duration is defined)
     if target_duration_ms is not None and current_position + len(audio) > target_duration_ms:
         combined_audio += audio  # Add the last audio even if it exceeds the limit
-        start_time_hours = current_position // 3600000 
+        start_time_hours = current_position // 3600000
         start_time_minutes = (current_position % 3600000) // 60000
-        start_time_seconds = (current_position % 60000) // 1000 
+        start_time_seconds = (current_position % 60000) // 1000
         audio_start_times.append(f"{start_time_hours:02}:{start_time_minutes:02}:{start_time_seconds:02} - {audio_file}")
         current_position += len(audio)
         break  # Stop processing further audio files
@@ -74,18 +78,17 @@ for audio_file in audio_files:
     combined_audio += audio
 
     # Save the start time (convert milliseconds to minutes:seconds format)
-    start_time_hours = current_position // 3600000 
+    start_time_hours = current_position // 3600000
     start_time_minutes = (current_position % 3600000) // 60000
-    start_time_seconds = (current_position % 60000) // 1000 
+    start_time_seconds = (current_position % 60000) // 1000
     audio_start_times.append(f"{start_time_hours:02}:{start_time_minutes:02}:{start_time_seconds:02} - {audio_file}")
-
 
     # Update the current position
     current_position += len(audio)
 
 # Export the combined audio to a new file
-output_audio_path = os.path.join(destination_audio_folder, "combined_audio.wav")
-combined_audio.export(output_audio_path, format="wav")
+output_audio_path = os.path.join(destination_audio_folder, f"combined_audio.{output_format}")
+combined_audio.export(output_audio_path, format=output_format)
 
 # Save the list of audio start times to a TXT file
 output_txt_path = os.path.join(destination_audio_folder, "audio_list.txt")
