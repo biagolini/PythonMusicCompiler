@@ -99,7 +99,7 @@ output_audio_path = os.path.join(destination_audio_folder, f"{output_file_name}.
 combined_audio.export(output_audio_path, format=output_format)
 
 # Save the list of audio start times to a TXT file
-output_txt_path = os.path.join(destination_audio_folder, "audio_list.txt")
+output_txt_path = os.path.join(destination_audio_folder, f"{output_file_name}_audio_list.txt")
 with open(output_txt_path, "w") as txt_file:
     txt_file.write("\n".join(audio_start_times))
 
