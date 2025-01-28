@@ -11,6 +11,9 @@ source_audio_folder = "SourceFiles"
 # Define the folder to deposit the audio combination file
 destination_audio_folder = "OutputFiles"
 
+# Define the output file name (default is None)
+output_file_name = None  # If None, the file name will match the destination folder name
+
 # Definition of fade in (first 3 seconds) and fade out (last 3 seconds)
 fade_in_duration = 3000  # in milliseconds (3 seconds)
 fade_out_duration = 3000  # in milliseconds (3 seconds)
@@ -24,6 +27,11 @@ target_duration_seconds = 14400  # 4 hours
 
 # Ensure the destination folder exists
 os.makedirs(destination_audio_folder, exist_ok=True)
+
+# Determine the output file name based on the folder name if not provided
+if output_file_name is None:
+    folder_name = os.path.basename(os.path.normpath(destination_audio_folder))
+    output_file_name = folder_name
 
 # Check if the source folder exists and has .wav or .mp3 files
 if not os.path.exists(source_audio_folder):
@@ -87,7 +95,7 @@ for audio_file in audio_files:
     current_position += len(audio)
 
 # Export the combined audio to a new file
-output_audio_path = os.path.join(destination_audio_folder, f"combined_audio.{output_format}")
+output_audio_path = os.path.join(destination_audio_folder, f"{output_file_name}.{output_format}")
 combined_audio.export(output_audio_path, format=output_format)
 
 # Save the list of audio start times to a TXT file
