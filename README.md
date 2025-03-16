@@ -1,16 +1,30 @@
 # Python Music Compiler
 
-This project is a simple yet powerful tool for compiling `.wav` and `.mp3` music files into a single track, designed to help creators produce seamless background music for YouTube videos. By automatically applying fade-in and fade-out effects, this project creates a polished audio track ready for use.
+This project provides two scripts for compiling `.wav` and `.mp3` music files into seamless audio tracks: `simple_compiler.py` and `weighted_compiler.py`.
+
+- **`simple_compiler.py`**: A basic script that merges all audio files from a folder into a single track with fade-in and fade-out effects.
+- **`weighted_compiler.py`**: An enhanced version that ensures fair distribution of music selection using an Excel-based history to control track frequency. This is an ideal solution for small content creators who want to maintain usage records without needing a database.
 
 ## Features
-- Combine multiple `.wav` and `.mp3` files into a single audio track.
+### `simple_compiler.py`
+- Combines multiple `.wav` and `.mp3` files into a single audio track.
 - Automatically applies 3-second fade-in and fade-out effects for smooth transitions.
 - Allows setting a maximum duration for the output file to manage its length.
-- Generates a text file listing the track names and their start times for easy reference or inclusion in video descriptions.
-- Exports the final audio as `combined_audio.wav`.
+- Generates a text file listing the track names and their start times for easy reference.
+
+### `weighted_compiler.py`
+- All features from `simple_compiler.py`, plus:
+- Uses an Excel file to track usage history of tracks.
+- Implements inverse probability weighting to ensure less frequently used tracks have a higher chance of being selected.
+- Allows creators to maintain a simple track history without requiring a database.
+- Ideal for small content creators who want fair and controlled music selection over time.
+- Requires an Excel file (`usage_history.xlsx`) with the following columns:
+  - `music_path`: The file path of the music track.
+  - `folder_path`: The directory containing the music file.
+  - `n_usage`: The number of times the track has been used.
+  - `deleted_renamed`: A flag indicating whether the file was deleted or renamed.
 
 ## Getting Started
-
 Follow these steps to get the project up and running:
 
 ### Prerequisites
@@ -18,7 +32,6 @@ Follow these steps to get the project up and running:
 - The `pydub` library is required for audio processing.
 
 ## Dependencies
-
 The following Python packages are required:
 - `pydub`: For audio manipulation.
 - `ffmpeg`: Required by `pydub` for audio processing. Ensure it is installed and available in your system PATH.
@@ -63,11 +76,11 @@ Install `ffmpeg` using your system's package manager. For example:
    pip install -r requirements.txt
    ```
 
-### Usage
+## Usage
 
-Run the project with the following command:
+### Running `simple_compiler.py`
 ```bash
-python3 main.py
+python3 simple_compiler.py
 ```
 
 The script will:
@@ -75,11 +88,18 @@ The script will:
 2. Apply fade-in and fade-out effects.
 3. Combine the audio files into a single track.
 4. Save the compiled track as `OutputFiles/combined_audio.wav`.
-5. Generate a text file (`audio_list.txt`) listing the names of the tracks and their start times in the format `minutes:seconds - filename`.
+5. Generate a text file (`audio_list.txt`) listing the track names and their start times.
 
-### Notes
-- The `audio_list.txt` file can be used to easily create video descriptions for YouTube, listing the music tracks and their starting times.
-- If you wish to ensure all tracks are included regardless of their combined duration, set the `target_duration_seconds` parameter to `None` in the script.
+### Running `weighted_compiler.py`
+```bash
+python3 weighted_compiler.py
+```
+
+This script follows a more advanced approach by:
+1. Reading an Excel file (`usage_history.xlsx`) to track how often each track is used.
+2. Using a probability weighting method to prioritize lesser-used tracks.
+3. Compiling the selected tracks into a single audio file.
+4. Updating the Excel file with the new usage history after processing.
 
 ### Example
 
@@ -91,9 +111,13 @@ The script will:
    └── track3.wav
    ```
 
-2. Run the script:
+2. Run `simple_compiler.py`:
    ```bash
-   python3 main.py
+   python3 simple_compiler.py
+   ```
+   or run `weighted_compiler.py`:
+   ```bash
+   python3 weighted_compiler.py
    ```
 
 3. The output will be saved as:
