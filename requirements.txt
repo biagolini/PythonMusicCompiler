@@ -1,1 +1,4 @@
 pydub
+pandas
+openpyxl
+ffmpeg-python
